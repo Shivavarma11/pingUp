@@ -1,7 +1,7 @@
 import { BadgeCheck, Heart, MessageCircle, Share2 } from 'lucide-react'
 import React, { useState } from 'react'
 import moment from 'moment'
-import { dummyUserData } from '../assets/assets';
+import {dummyUserData} from '../assets/assets'
 import { useNavigate } from 'react-router-dom';
 
 const PostCard = ({post}) => {
