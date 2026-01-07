@@ -1,4 +1,4 @@
-export const protect=async((req,res,next)=>{
+export const protect=async(req,res,next)=>{
     try{
         const{userId}=req.auth();
         if(!userId){
@@ -9,4 +9,4 @@ export const protect=async((req,res,next)=>{
         res.json({success:false,message:error.message})
     }
 
-})
+};
