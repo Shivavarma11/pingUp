@@ -1,6 +1,5 @@
 import fs from "fs"
 import imagekit from "../configs/imageKit.js";
-import { profile } from "console";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -65,7 +64,7 @@ export const getFeedPosts = async(req,res)=>{
         const posts = await Post.find({user:{$in:userIds}})
         .populate('user')
         .sort({createdAt:-1});
-        
+
         res.json({success:true,posts})
     } catch (error) {
         console.log(error);
