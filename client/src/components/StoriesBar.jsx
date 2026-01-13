@@ -1,19 +1,37 @@
-import React from 'react'
 import { useState } from 'react'
-import { dummyStoriesData } from '../assets/assets';
 import { useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import moment from 'moment';
 import StoryModel from './StoryModel';
 import StoryViewer from './StoryViewer';
+import { useAuth } from '@clerk/clerk-react';
+import toast from 'react-hot-toast';
+import api from '../api/axios';
 
 const StoriesBar = () => {
+
+    const { getToken } = useAuth();
+
     const [stories, setStories] = useState([]);
     const [showModel, setShowModel] = useState(false);
     const [viewStory, setViewStory] = useState(null);
 
     const fetchStories = async () => {
-        setStories(dummyStoriesData);
+        try {
+            const token = await getToken()
+            const { data } = await api.get('/api/story/get', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            if (data.success) {
+                setStories(data.stories)
+            } else {
+                toast(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+
+        }
+
     }
     useEffect(() => {
         fetchStories()
@@ -42,7 +60,7 @@ const StoriesBar = () => {
                 {/* strory cards */}
                 {
                     stories.map((story, index) => (
-                        <div onClick={()=>setViewStory(story)} key={index} className={`relative rounded-lg shadow min-w-30 max-w-30 max-h-40 cursor-pointer hover:shodaw-lg
+                        <div onClick={() => setViewStory(story)} key={index} className={`relative rounded-lg shadow min-w-30 max-w-30 max-h-40 cursor-pointer hover:shodaw-lg
                     transition-all duration-200 bg-linear-to-b from-indigo-500
                     to-purple-600 hover:from-indigo-700 hover:to-purple-800
                     active:scale-95`}>
@@ -82,8 +100,8 @@ const StoriesBar = () => {
             {/* Add Story Model */}
             {showModel && <StoryModel setShowModel={setShowModel}
                 fetchStories={fetchStories} />}
-                {/* View Stroy model */}
-                {viewStory && <StoryViewer viewStory={viewStory} setViewStory={setViewStory}/>}
+            {/* View Stroy model */}
+            {viewStory && <StoryViewer viewStory={viewStory} setViewStory={setViewStory} />}
 
 
         </div>
