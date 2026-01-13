@@ -14,6 +14,7 @@ import {Toaster} from 'react-hot-toast'
 import ChatBox from './pages/ChatBox'
 import { useDispatch } from 'react-redux'
 import { fetchUser } from './features/user/usersSlice'
+import { fetchConnections } from './features/connections/connectionsSlice'
 
 const App = () => {
   const{user}=useUser()
@@ -27,6 +28,7 @@ const App = () => {
       if(user){
         const token = await getToken()
         dispatch(fetchUser(token))
+        dispatch(fetchConnections(token))
         
       }   
     }
