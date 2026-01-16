@@ -64,19 +64,18 @@ export const updateUserData = async (req, res) => {
 
             const response = await imagekit.upload({
                 file: buffer,
-                fileName: profile.originalname,
-                transformation: [
-                    { width: 512, quality: 'auto', format: 'webp' }
-                ]
+                fileName: profile.originalname
             })
-            fs.unlinkSync(profile.path)
+
 
             const url = imagekit.url({
                 path: response.filePath,
                 transformation: [
-                    { quality: 'auto' },
-                    { format: 'webp' },
-                    { width: '512' }
+                    {
+                        quality: 'auto',
+                        format: 'webp',
+                        width: 512
+                    }
                 ]
             })
 
@@ -88,20 +87,19 @@ export const updateUserData = async (req, res) => {
             const buffer = fs.readFileSync(cover.path)
             const response = await imagekit.upload({
                 file: buffer,
-                fileName: cover.originalname,
-                transformation: [
-                    { width: 512, quality: 'auto', format: 'webp' }
-                ]
+                fileName: cover.originalname
             })
 
-            fs.unlinkSync(cover.path)
+
 
             const url = imagekit.url({
                 path: response.filePath,
                 transformation: [
-                    { quality: 'auto' },
-                    { format: 'webp' },
-                    { width: '1280' }
+                    {
+                        quality: 'auto',
+                        format: 'webp',
+                        width: 1280
+                    }
                 ]
             })
 
@@ -279,6 +277,13 @@ export const getUserConnections = async (req, res) => {
     try {
         const { userId } = req.auth();
         const user = await User.findById(userId).populate('connections followers following');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
 
 
         const connections = user.connections
