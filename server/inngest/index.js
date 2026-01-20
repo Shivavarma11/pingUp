@@ -60,57 +60,64 @@ const sendNewConnectionRequestRemainder = inngest.createFunction(
   async ({ event, step }) => {
     const { connectionId } = event.data;
 
-    await step.run("send-initial-mail", async () => {
+    await step.run("send-connection-request-mail", async () => {
       const connection = await Connection.findById(connectionId).populate(
         "from_user_id to_user_id"
       );
-      if (!connection) return;
-
-      await sendEmail({
-        to: connection.to_user_id.email,
-        subject: "New Connection Request",
-        body: `
+      const subject = `New Connection Request`;
+      const body = `
         <div style="font-family: Arial, sans-serif; padding:20px;">
           <h2>Hi ${connection.to_user_id.full_name},</h2>
           <p>You have a new connection request from 
-            ${connection.from_user_id.full_name} (@${connection.from_user_id.username})
-          </p>
+            ${connection.from_user_id.full_name} - (@${connection.from_user_id.username}) </p>
           <p>
             Click <a href="${process.env.FRONT_URL}/connections" style="color:#10b981;">
-            here</a> to respond.
+            here</a> to accept or reject the request.
           </p>
-          <p>Thanks,<br/>PingUp</p>
-        </div>`
-      });
-    });
-
-    const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    await step.sleepUntil("wait-24-hours", in24Hours);
-
-    await step.run("send-reminder-mail", async () => {
-      const connection = await Connection.findById(connectionId).populate(
-        "from_user_id to_user_id"
-      );
-      if (!connection || connection.status === "accepted") return;
+          <br/>
+          <p>Thanks,<br/>PingUp - Stay Connected</p>
+        </div>`;
 
       await sendEmail({
         to: connection.to_user_id.email,
-        subject: "Reminder: Connection Request",
-        body: `
+        subject,
+        body
+      })
+    })
+
+    const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    await step.sleepUntil("wait-for-24-hours", in24Hours);
+
+    await step.run("send-connection-request-remainder", async () => {
+      const connection = await Connection.findById(connectionId).populate(
+        "from_user_id to_user_id");
+      if (connection.status === "accepted") {
+        return { message: "Already accepted" };
+      }
+
+      const subject = `New Connection Request`;
+      const body = `
         <div style="font-family: Arial, sans-serif; padding:20px;">
           <h2>Hi ${connection.to_user_id.full_name},</h2>
-          <p>You still have a pending connection request from 
-            ${connection.from_user_id.full_name}
-          </p>
+          <p>You have a new connection request from 
+            ${connection.from_user_id.full_name} - (@${connection.from_user_id.username}) </p>
           <p>
-            <a href="${process.env.FRONT_URL}/connections" style="color:#10b981;">
-            View request</a>
+            Click <a href="${process.env.FRONT_URL}/connections" style="color:#10b981;">
+            here</a> to accept or reject the request.
           </p>
-        </div>`
-      });
-    });
-  }
-);
+          <br/>
+          <p>Thanks,<br/>PingUp - Stay Connected</p>
+        </div>`;
+
+      await sendEmail({
+        to: connection.to_user_id.email,
+        subject,
+        body
+      })
+
+      return {message : "Remainder sent."}
+    })
+  })
 
 /* ---------------- STORY DELETE ---------------- */
 
