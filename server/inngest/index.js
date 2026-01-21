@@ -124,10 +124,9 @@ const sendNewConnectionRequestRemainder = inngest.createFunction(
         body
       })
 
-      return { message: "Remainder sent." }
+      return {message : "Remainder sent."}
     })
   })
-
 
 /* ---------------- STORY DELETE ---------------- */
 
