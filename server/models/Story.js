@@ -3,22 +3,21 @@ import mongoose from "mongoose";
 const storySchema = new mongoose.Schema({
     user: {
         type: String,
-        required: true,
         ref: 'User',
+        required: true     
     },
     content: {
         type: String
     },
-    media_url: [
-        {
-            type: String
-        }
-    ],
+    media_url:
+    {
+        type: String
+    },
     media_type: {
         type: String,
-        enum: ['text', 'image', 'video'],
+        enum: ['text', 'image', 'video']
     },
-    likes_count: [{
+    views_count: [{
         type: String,
         ref: 'User'
     }],

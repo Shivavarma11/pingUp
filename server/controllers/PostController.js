@@ -4,30 +4,32 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 
 // Add post
-export const addPost = async(req,res)=>{
+export const addPost = async (req, res) => {
     try {
-        const {userId}=req.auth();
-        const{content,post_type}=req.body;
-        const images=req.files
+        const { userId } = req.auth();
+        const { content, post_type } = req.body;
+        const images = req.files
 
-        let image_urls=[]
+        let image_urls = []
 
-        if(images.length){
-            image_urls=await Promise.all(
-                images.map(async(image)=>{
-                    const fileBuffer=fs.readFileSync(image.path)
+        if (images && images.length > 0) {
+            image_urls = await Promise.all(
+                images.map(async (image) => {
+                    const fileBuffer = fs.readFileSync(image.path)
                     const response = await imagekit.upload({
-                        file:fileBuffer,
-                        fileName:image.originalname,
-                        folder:"posts",
+                        file: fileBuffer,
+                        fileName: image.originalname,
+                        folder: "posts",
                     })
 
-                    const url=imagekit.url({
-                        path:response.filePath,
-                        transformation:[
-                            {quality:'auto'},
-                            {format:'webp'},
-                            {width:'1280'}
+                    const url = imagekit.url({
+                        path: response.filePath,
+                        transformation: [
+                            {
+                                quality: 'auto',
+                                format: 'webp',
+                                width: '1280'
+                            }
                         ]
                     })
 
@@ -36,62 +38,62 @@ export const addPost = async(req,res)=>{
             )
         }
         await Post.create({
-            user:userId,
+            user: userId,
             content,
             image_urls,
             post_type
         })
 
-        res.json({success:true,message:"Post created successfully"});
-        
+        res.json({ success: true, message: "Post created successfully" });
+
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:error.message});
-        
+        res.json({ success: false, message: error.message });
+
     }
 }
 
 
 //Get Posts
 
-export const getFeedPosts = async(req,res)=>{
+export const getFeedPosts = async (req, res) => {
     try {
-        const{userId} = req.auth();
-        const user =await User.findById(userId);
+        const { userId } = req.auth();
+        const user = await User.findById(userId);
 
         //user connections and followings
-        const userIds=[userId,...user.connections,...user.following]
-        const posts = await Post.find({user:{$in:userIds}})
-        .populate('user')
-        .sort({createdAt:-1});
+        const userIds = [userId, ...user.connections, ...user.following]
+        const posts = await Post.find({ user: { $in: userIds } })
+            .populate('user')
+            .sort({ createdAt: -1 });
 
-        res.json({success:true,posts})
+        res.json({ success: true, posts })
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:error.message});
-        
+        res.json({ success: false, message: error.message });
+
     }
 }
 
 //Like Post
-export const likePost = async(req,res)=>{
-    try{
-        const{userId}=req.auth()
-        const{postId}=req.body;
+export const likePost = async (req, res) => {
+    try {
+        const { userId } = req.auth()
+        const { postId } = req.body;
 
-        const post=await Post.findById(postId);
+        const post = await Post.findById(postId);
 
-        if(post.likes_count.includes(userId)){
-            post.likes_count=post.likes_count.filter(user=> user!==userId)
+        if (post.likes_count.includes(userId)) {
+            post.likes_count = post.likes_count.filter(user => user !== userId)
             await post.save();
-            res.json({success:true,message:'Post unliked'});
-        }else{
+            res.json({ success: true, message: 'Post unliked' });
+        } else {
             post.likes_count.push(userId);
             await post.save();
-            res.json({success:true,message:'Post liked'});
+            res.json({ success: true, message: 'Post liked' });
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
-        res.json({success:false,message:error.message});
+        res.json({ success: false, message: error.message });
     }
 }

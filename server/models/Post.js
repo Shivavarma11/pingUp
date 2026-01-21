@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import mangoose from 'mongoose'
 
 const postSchema = new mongoose.Schema({
     user: { type: String, ref: 'User', required: true },
