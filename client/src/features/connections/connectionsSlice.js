@@ -30,7 +30,7 @@ const connectonsSlice = createSlice({
                 state.connections = action.payload.connections
                 state.pendingConnections = action.payload.connections
                 state.followers = action.payload.followers
-                state.follwing = action.payload.follwing
+                state.following = action.payload.following
 
             }
         })

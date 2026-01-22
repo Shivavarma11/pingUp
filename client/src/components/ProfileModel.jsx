@@ -46,7 +46,6 @@ const ProfileModel = ({ setShowEdit }) => {
             profile_picture && userData.append('profile', profile_picture);
             cover_photo && userData.append('cover', cover_photo)
 
-
             const token = await getToken()
             const result = await dispatch(updateUser({ userData, token })).unwrap();
 

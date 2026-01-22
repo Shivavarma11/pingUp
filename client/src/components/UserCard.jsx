@@ -36,7 +36,6 @@ const UserCard = ({ user }) => {
     }
 
     const handleConnectionRequest = async () => {
-        // ✅ FIXED LOGIC
         if (currentUser?.connections?.includes(user._id)) {
             return navigate('/messages/' + user._id)
         }

@@ -156,7 +156,7 @@ export const followUser = async (req, res) => {
         user.following.push(id);
         await user.save();
 
-        const toUser = User.findById(id);
+        const toUser =await User.findById(id);
         toUser.followers.push(userId);
         await toUser.save();
 
@@ -284,7 +284,7 @@ export const acceptConnectionRequest = async (req, res) => {
         const { userId } = req.auth();
         const { id } = req.body;
 
-        const connection = await Connection.findOne({ from_user_id: id, to_user_id: userId })
+        const connection = await Connection.findOne({ from_user_id: id, to_user_id: userId,status: 'pending' })
 
         if (!connection) {
             return res.json({ success: false, message: "Connection not found" });

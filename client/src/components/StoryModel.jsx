@@ -84,7 +84,6 @@ const StoryModel = ({ setShowModel, fetchStories }) => {
         } catch (error) {
             toast.error(error.message)
         }
-
     }
 
 

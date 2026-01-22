@@ -15,19 +15,17 @@ const Profile = () => {
   const currentUser = useSelector((state) => state.user.value)
   const { getToken } = useAuth()
   const { profileId } = useParams()
-
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
   const [activeTab, setActiveTab] = useState('posts')
   const [showEdit, setShowEdit] = useState(false)
 
-  const fetchUser = async (id) => {
+  const fetchUser = async (profileId) => {
+    const token = await getToken()
     try {
-      const token = await getToken()
-
       const { data } = await api.post(
         '/api/user/profiles',
-        { profileId: id },
+        { profileId },
         { headers: { Authorization: `Bearer ${token}` } }
       )
 
