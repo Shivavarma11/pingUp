@@ -4,6 +4,7 @@ import Connection from "../models/Connection.js";
 import sendEmail from "../configs/nodeMailer.js";
 import Story from "../models/Story.js";
 import Message from "../models/Message.js";
+import 'dotenv/config';
 
 // Create client
 export const inngest = new Inngest({ id: "pingup-app" });
@@ -80,7 +81,7 @@ const sendNewConnectionRequestRemainder = inngest.createFunction(
           <p>You have a new connection request from 
             ${connection.from_user_id.full_name} - (@${connection.from_user_id.username}) </p>
           <p>
-            Click <a href="${process.env.FRONT_URL}/connections" style="color:#10b981;">
+            Click <a href="${process.env.FRONTEND_URL}/connections" style="color:#10b981;">
             here</a> to accept or reject the request.
           </p>
           <br/>
@@ -111,7 +112,7 @@ const sendNewConnectionRequestRemainder = inngest.createFunction(
           <p>You have a new connection request from 
             ${connection.from_user_id.full_name} - (@${connection.from_user_id.username}) </p>
           <p>
-            Click <a href="${process.env.FRONT_URL}/connections" style="color:#10b981;">
+            Click <a href="${process.env.FRONTEND_URL}/connections" style="color:#10b981;">
             here</a> to accept or reject the request.
           </p>
           <br/>
@@ -167,7 +168,7 @@ const sendNotificationOfUnseenMessages = inngest.createFunction(
         <div style="font-family:Arial, sans-serif; padding:20px;">
           <h2>Hi ${user.full_name},</h2>
           <p>You have ${unseenCount[userId]} unseen messages.</p>
-          <p>Click <a href="${process.env.FRONT_URL}/messages" style="color:#10b981;">
+          <p>Click <a href="${process.env.FRONTEND_URL}/messages" style="color:#10b981;">
            here </a> to view them </p>
           <br/>
           <p> Thanks,<br/>PingUp - Stay Connected</p>

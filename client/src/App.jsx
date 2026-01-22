@@ -25,15 +25,6 @@ const App = () => {
 
   const dispatch = useDispatch()
 
-
-  useEffect(()=>{
-    if(user){
-      getToken().then((token)=> console.log(token))
-    }
-  },[user])
-
-
-  // --del
   useEffect(() => {
 
     const fetchData = async () => {
