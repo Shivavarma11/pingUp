@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 
 const ChatBox = () => {
 
-  const {messages} = useSelector((state) => state.message)
+  const {messages} = useSelector((state) => state.messages)
   const { userId } = useParams()
   const { getToken } = useAuth()
   const dispatch = useDispatch()
@@ -41,7 +41,7 @@ const ChatBox = () => {
       if (!text && !image) return;
 
       const token = await getToken()
-      const formData = new formData()
+      const formData = new FormData()
       formData.append('to_user_id', userId)
       formData.append('text', text)
       image && formData.append('image', image);
