@@ -28,7 +28,7 @@ const connectonsSlice = createSlice({
         builder.addCase(fetchConnections.fulfilled, (state, action) => {
             if (action.payload) {
                 state.connections = action.payload.connections
-                state.pendingConnections = action.payload.connections
+                state.pendingConnections = action.payload.pendingConnections
                 state.followers = action.payload.followers
                 state.following = action.payload.following
 
