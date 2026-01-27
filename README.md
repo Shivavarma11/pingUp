@@ -177,9 +177,9 @@ Managing complex global state with Redux Toolkit
 
 Shiva
 
-GitHub: https://github.com/your-username
+GitHub: https://github.com/Shivavarma11
 
-LinkedIn: https://linkedin.com/in/your-profile
+LinkedIn: https://www.linkedin.com/in/shiva-barisetti-5684782b8/
 
 ⭐ If you like this project
 
